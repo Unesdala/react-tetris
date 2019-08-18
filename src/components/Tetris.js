@@ -100,7 +100,12 @@ const Tetris = () => {
         <Stage stage={stage} />
         <aside>
           {gameOver ? (
-            <Display gameOver={gameOver} text="Game Over" />
+            <React.Fragment>
+              <Display gameOver={gameOver} text="Game Over" />
+              <Display text={`Final Score: ${score}`} />
+              <Display text={`Final Rows: ${rows}`} />
+              <Display text={`Final Level: ${level}`} />
+            </React.Fragment>
           ) : (
           <div>
             <Display text={`Score: ${score}`} />
