@@ -15,10 +15,12 @@ import { useGameStatus } from '../hooks/useGameStatus';
 import Stage from './Stage';
 import Display from './Display';
 import StartButton from './StartButton';
+import PauseButton from './PauseButton';
 
 const Tetris = () => {
   const [dropTime, setDropTime] = useState(null);
   const [gameOver, setGameOver] = useState(false);
+  let gamePaused = false;
 
   const [player, updatePlayerPos, resetPlayer, playerRotate] = usePlayer();
   const [stage, setStage, rowsCleared] = useStage(player, resetPlayer);
@@ -39,6 +41,13 @@ const Tetris = () => {
     setScore(0);
     setRows(0);
     setLevel(0);
+  }
+
+  const pauseGame = () => {
+    if (!gamePaused) {
+      setDropTime(null);
+      gamePaused = true;
+    }
   }
 
   const drop = () => {
@@ -66,13 +75,14 @@ const Tetris = () => {
       }
     }
   }
+
   const dropPlayer = () => {
     setDropTime(null);
     drop();
   }
 
   const move = ({ keyCode }) => {
-    if (!gameOver) {
+    if (!gameOver && !gamePaused) {
       if (keyCode === 37) {
         movePlayer(-1);
       } else if (keyCode === 39) {
@@ -81,6 +91,11 @@ const Tetris = () => {
         dropPlayer();
       } else if (keyCode === 38 ) {
         playerRotate(stage, 1)
+      }
+    }
+    if (!gameOver) {
+      if (keyCode === 80) {
+        pauseGame();
       }
     }
   }
@@ -114,6 +129,7 @@ const Tetris = () => {
           </div>
           )}
           <StartButton callback={startGame}/>
+          <PauseButton callback={pauseGame}/>
         </aside>
       </StyledTetris>
     </StyledTetrisWrapper>
